@@ -10,10 +10,7 @@ const {
 const container = createContainer();
 
 container.loadModules([[
-  'models/**/*.js', {
-    register: asValue,
-    lifetime: Lifetime.SINGLETON,
-  },
+  'models/**/*.js', { register: asValue },
 ]], {
   cwd: __dirname,
   resolverOptions: {

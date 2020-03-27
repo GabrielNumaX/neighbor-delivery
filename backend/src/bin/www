@@ -41,8 +41,6 @@ app.set('port', port);
  */
 
 function onError(error) {
-  debugger
-
   if (error.syscall !== 'listen') {
     throw error;
   }
@@ -71,8 +69,6 @@ function onError(error) {
  */
 
 function onListening() {
-  debugger
-
   const addr = server.address();
   const bind = typeof addr === 'string'
     ? 'pipe ' + addr

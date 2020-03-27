@@ -10,16 +10,17 @@ async function callback(req, res) {
   const { id, provider } = profile;
 
   const { UserModel } = req.container.cradle;
-  const user = await UserModel.findOne({ id });
+  const user = await UserModel.findOne({ providerId: id });
   if (!user) {
     await UserModel.create({
-      name: id,
       accessToken,
       refreshToken,
       provider,
+      providerId: id,
     });
   }
 
+  // TODO: must redirect somewhere
   res.send('callback');
 }
 
