@@ -5,13 +5,17 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
+const { scopePerRequest } = require('awilix-express');
 
 require('./config');
+require('./db');
+
+const container = require('./injection');
 const api = require('./api');
 
 const app = express();
 
-passport.serializeUser((user, done) => done(null, user.id));
+passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((id, done) => done(null, id));
 
 // view engine setup
@@ -20,6 +24,7 @@ app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(scopePerRequest(container));
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
