@@ -22,7 +22,7 @@ async function callback(req, res) {
   const token = jwt.sign(
     pick(user, ['_id']),
     jwtSecret,
-    { expiresIn: '1h' },
+    { expiresIn: 3600 * 24 * 30 }, // 30 days
   );
 
   // TODO: must redirect somewhere

@@ -19,16 +19,22 @@ container.loadModules([[
     register: asClass,
     lifetime: Lifetime.SINGLETON,
   },
-]], {
+], [
+  'services/**/*.js', {
+    lifetime: Lifetime.SCOPED,
+  },
+],
+], {
   cwd: __dirname,
   resolverOptions: {
     injectionMode: InjectionMode.PROXY,
+    register: asFunction,
   },
 });
 
 container.register({
   jwtSecret: asValue(process.env.JWT_SECRET),
-})
+});
 
 
 module.exports = container;
