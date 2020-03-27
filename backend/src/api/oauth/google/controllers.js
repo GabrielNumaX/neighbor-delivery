@@ -1,4 +1,6 @@
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
+const { pick } = require('lodash');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 function auth(accessToken, refreshToken, profile, cb) {
@@ -9,19 +11,22 @@ async function callback(req, res) {
   const { profile, accessToken, refreshToken } = req.user;
   const { id, provider } = profile;
 
-  const { UserModel } = req.container.cradle;
-  const user = await UserModel.findOne({ providerId: id });
-  if (!user) {
-    await UserModel.create({
-      accessToken,
-      refreshToken,
-      provider,
-      providerId: id,
-    });
-  }
+  const { jwtSecret, UserStore } = req.container.cradle;
+  const user = await UserStore.persist({
+    provider,
+    providerId: id,
+    accessToken,
+    refreshToken,
+  });
+
+  const token = jwt.sign(
+    pick(user, ['_id']),
+    jwtSecret,
+    { expiresIn: '1h' },
+  );
 
   // TODO: must redirect somewhere
-  res.send('callback');
+  res.send(`token = ${token}`);
 }
 
 passport.use(new GoogleStrategy({
